@@ -137,7 +137,7 @@ public class Worker implements Callable<WorkerRunResult> {
 	 * @throws BookStoreException
 	 */
 	private void runFrequentStockManagerInteraction() throws BookStoreException {
-		StockManager stockManager = CertainBookStore.getInstance();
+		StockManager stockManager = configuration.getStockManager();
 		List<StockBook> books = stockManager.getBooks();
 		
 		Collections.sort(books, new Comparator<StockBook>(){
