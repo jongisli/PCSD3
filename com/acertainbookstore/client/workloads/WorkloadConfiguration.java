@@ -24,6 +24,11 @@ public class WorkloadConfiguration {
 	private BookSetGenerator bookSetGenerator = null;
 	private StockManager stockManager = null;
 	private BookStore bookStore = null;
+	
+	// This is the number k defined in the assignment text
+	// describing runFrequentStockManagerInteraction().
+	private int numBooksToAddCopiesTo = 10; 
+		
 
 	public int getNumBooksToBuy() {
 		return numBooksToBuy;
@@ -127,6 +132,14 @@ public class WorkloadConfiguration {
 
 	public void setBookSetGenerator(BookSetGenerator bookSetGenerator) {
 		this.bookSetGenerator = bookSetGenerator;
+	}
+
+	public int getNumBooksToAddCopiesTo() {
+		return numBooksToAddCopiesTo;
+	}
+
+	public void setNumBooksToAddCopiesTo(int numBooksToAddCopiesTo) {
+		this.numBooksToAddCopiesTo = numBooksToAddCopiesTo;
 	}
 
 }

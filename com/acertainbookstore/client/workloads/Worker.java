@@ -3,9 +3,19 @@
  */
 package com.acertainbookstore.client.workloads;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.Callable;
 
+import com.acertainbookstore.business.BookCopy;
+import com.acertainbookstore.business.CertainBookStore;
+import com.acertainbookstore.business.StockBook;
+import com.acertainbookstore.interfaces.StockManager;
 import com.acertainbookstore.utils.BookStoreException;
 
 /**
@@ -108,7 +118,26 @@ public class Worker implements Callable<WorkerRunResult> {
 	 * @throws BookStoreException
 	 */
 	private void runFrequentStockManagerInteraction() throws BookStoreException {
-		// TODO: Add code for Stock Replenishment Interaction
+		StockManager stockManager = CertainBookStore.getInstance();
+		List<StockBook> books = stockManager.getBooks();
+		
+		Collections.sort(books, new Comparator<StockBook>(){
+			@Override
+			public int compare(StockBook book1, StockBook book2) {
+				return Double.compare(book1.getNumCopies(), book2.getNumCopies());
+			}
+		});
+		
+		Set<BookCopy> bookCopiesToAdd = new HashSet<BookCopy>();
+		for (int i = 0; i < configuration.getNumBooksToAddCopiesTo(); i++) 
+		{
+			bookCopiesToAdd.add(
+					new BookCopy(
+							books.get(i).getISBN(), 
+							configuration.getNumAddCopies()));
+		}
+		
+		stockManager.addCopies(bookCopiesToAdd);
 	}
 
 	/**
