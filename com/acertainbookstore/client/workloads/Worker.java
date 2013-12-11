@@ -109,7 +109,26 @@ public class Worker implements Callable<WorkerRunResult> {
 	 * @throws BookStoreException
 	 */
 	private void runRareStockManagerInteraction() throws BookStoreException {
-		// TODO: Add code for New Stock Acquisition Interaction
+		int n = 10;
+		//invoke getBooks
+		List<StockBook> listBooks = configuration.getStockManager().getBooks();
+				
+		//gets a random set of books of size n
+		Set<StockBook> randomBooks = new HashSet<StockBook>();
+		randomBooks = configuration.getBookSetGenerator().nextSetOfStockBooks(n);
+				
+		//Puts the books which does not exist in the listBooks
+		//in a new set, booksToAdd.
+		Set<StockBook> booksToAdd = new HashSet<StockBook>();
+		for (StockBook b : listBooks) {
+			if (!randomBooks.contains(b)) {
+				booksToAdd.add(b);
+			}
+		}
+				
+		//Adds the new set of books that was not found 
+		//in the list returned by getBooks
+		configuration.getStockManager().addBooks(booksToAdd);	
 	}
 
 	/**
