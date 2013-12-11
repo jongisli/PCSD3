@@ -85,11 +85,28 @@ public class BookSetGenerator {
 			editorPick = new Random().nextBoolean();
 			
 
-			Random r = new Random(); // perhaps make it a class variable so you
-										// don't make a new one every time
 			StringBuilder titleBuilder  = new StringBuilder();
 			StringBuilder authorBuilder = new StringBuilder();
 			
+			
+			char[] titleGenerated = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+			char[] authorGenerated = "abcdefghijklmnopqrstuvwxyz".toCharArray();
+			Random random = new Random();
+			
+			for (int i = 0; i < titleLength; i++) {
+			    char c = titleGenerated[random.nextInt(titleGenerated.length)];
+			    titleBuilder.append(c);
+			}
+			
+			for (int i = 0; i < authorLength; i++) {
+			    char ch = authorGenerated[random.nextInt(authorGenerated.length)];
+			    authorBuilder.append(ch);
+			}
+			
+			title  = titleBuilder.toString();
+			author = authorBuilder.toString();
+			
+			/*
 			for (int i = 0; i < titleLength; i++) {
 				char c = (char) (r.nextInt((int) (Character.MAX_VALUE)));
 				titleBuilder.append(c);
@@ -102,6 +119,7 @@ public class BookSetGenerator {
 			}
 			author = authorBuilder.toString();
 			
+			*/
 
 			booksGenerated.add(new ImmutableStockBook(ISBN, title, author,
 					price, numCopies, saleMisses, timesRated, totalRating,
