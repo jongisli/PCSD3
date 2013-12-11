@@ -121,22 +121,22 @@ public class Worker implements Callable<WorkerRunResult> {
 				.nextSetOfStockBooks(configuration.getSizeNtoGenerate());
 		Set<Integer> isbns = new HashSet<Integer>();
 		
-		//Takes the ISBNs of the randomBooks set and put it 
+		//Takes the ISBNs of the list and put it 
 		//in an Integer ISBN set
-		for (Iterator<StockBook> i = randomBooks.iterator(); i.hasNext();) {
-			StockBook elem = i.next();
-			isbns.add(elem.getISBN());
+				
+		for (StockBook b : listBooks) {
+			isbns.add(b.getISBN());
 		}
 		
-		//Puts the ISBN which does not exist in the listBooks
+		//Puts the ISBN which does not exist in the Integer set of ISBNs
 		//in a new set, booksToAdd.
 		Set<StockBook> booksToAdd = new HashSet<StockBook>();
-		for (StockBook b : listBooks) {
-				if (!isbns.contains(b.getISBN())){
-					booksToAdd.add(b);
-			}
+		for (Iterator<StockBook> i = randomBooks.iterator(); i.hasNext();) {
+			StockBook elem = i.next();
+			if(!isbns.contains(elem.getISBN()))
+				booksToAdd.add(elem);
 		}
-				
+
 		//Adds the new set of books that was not found 
 		//in the list returned by getBooks
 		configuration.getStockManager().addBooks(booksToAdd);	
