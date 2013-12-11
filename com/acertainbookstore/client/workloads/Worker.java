@@ -13,9 +13,11 @@ import java.util.Random;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
+import com.acertainbookstore.business.Book;
 import com.acertainbookstore.business.BookCopy;
 import com.acertainbookstore.business.CertainBookStore;
 import com.acertainbookstore.business.StockBook;
+import com.acertainbookstore.interfaces.BookStore;
 import com.acertainbookstore.interfaces.StockManager;
 import com.acertainbookstore.utils.BookStoreException;
 
@@ -174,7 +176,23 @@ public class Worker implements Callable<WorkerRunResult> {
 	 * @throws BookStoreException
 	 */
 	private void runFrequentBookStoreInteraction() throws BookStoreException {
-		// TODO: Add code for Customer Interaction
+		BookStore client = configuration.getBookStore();
+		List<Book> editorPicks = client.getEditorPicks(configuration.getNumEditorPicksToGet());
+		
+		Set<Integer> ISBNs = new HashSet<Integer>();
+		for (Book book : editorPicks)
+			ISBNs.add(book.getISBN());
+		
+		Set<Integer> ISBNsToBuy = configuration.getBookSetGenerator().sampleFromSetOfISBNs(
+				ISBNs, configuration.getNumBooksToBuy());
+		
+		Set<BookCopy> booksToBuy = new HashSet<BookCopy>();
+		for (int ISBN : ISBNsToBuy)
+		{	
+			booksToBuy.add(new BookCopy(ISBN, 1));
+		}
+		
+		client.buyBooks(booksToBuy);
 	}
 
 }
