@@ -5,11 +5,13 @@ package com.acertainbookstore.client.workloads;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import com.acertainbookstore.business.CertainBookStore;
+import com.acertainbookstore.business.StockBook;
 import com.acertainbookstore.client.BookStoreHTTPProxy;
 import com.acertainbookstore.client.StockManagerHTTPProxy;
 import com.acertainbookstore.interfaces.BookStore;
@@ -89,11 +91,10 @@ public class CertainWorkload {
 			bookStore = new BookStoreHTTPProxy(serverAddress);
 		}
 
-		// TODO: You should initialize data for your bookstore here
 		int numberOfBooks = 150;
 		BookSetGenerator bookgenerator = new BookSetGenerator();
-		bookgenerator.nextSetOfStockBooks(numberOfBooks);
-		
+		Set<StockBook> booksGenerated = bookgenerator.nextSetOfStockBooks(numberOfBooks);		
+		stockManager.addBooks(booksGenerated);
 
 		// Finished initialization, stop the clients if not localTest
 		if (!localTest) {
