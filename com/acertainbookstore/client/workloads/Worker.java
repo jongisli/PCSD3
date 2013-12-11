@@ -110,13 +110,13 @@ public class Worker implements Callable<WorkerRunResult> {
 	 * @throws BookStoreException
 	 */
 	private void runRareStockManagerInteraction() throws BookStoreException {
-		int n = 10;
 		//invoke getBooks
 		List<StockBook> listBooks = configuration.getStockManager().getBooks();
 				
 		//gets a random set of books of size n
 		Set<StockBook> randomBooks = new HashSet<StockBook>();
-		randomBooks = configuration.getBookSetGenerator().nextSetOfStockBooks(n);
+		randomBooks = configuration.getBookSetGenerator()
+				.nextSetOfStockBooks(configuration.getSizeNtoGenerate());
 		Set<Integer> isbns = new HashSet<Integer>();
 		
 		//Takes the ISBNs of the randomBooks set and put it 

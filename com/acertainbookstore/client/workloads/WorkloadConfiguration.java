@@ -28,7 +28,9 @@ public class WorkloadConfiguration {
 	// This is the number k defined in the assignment text
 	// describing runFrequentStockManagerInteraction().
 	private int numBooksToAddCopiesTo = 10; 
-		
+	
+	//Size n of the random set generated in runRareStockManagerInteraction()
+	private int sizeNtoGenerate = 10;	
 
 	public int getNumBooksToBuy() {
 		return numBooksToBuy;
@@ -140,6 +142,14 @@ public class WorkloadConfiguration {
 
 	public void setNumBooksToAddCopiesTo(int numBooksToAddCopiesTo) {
 		this.numBooksToAddCopiesTo = numBooksToAddCopiesTo;
+	}
+
+	public int getSizeNtoGenerate() {
+		return sizeNtoGenerate;
+	}
+
+	public void setSizeNtoGenerate(int sizeNtoGenerate) {
+		this.sizeNtoGenerate = sizeNtoGenerate;
 	}
 
 }
