@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
@@ -116,13 +117,21 @@ public class Worker implements Callable<WorkerRunResult> {
 		//gets a random set of books of size n
 		Set<StockBook> randomBooks = new HashSet<StockBook>();
 		randomBooks = configuration.getBookSetGenerator().nextSetOfStockBooks(n);
-				
-		//Puts the books which does not exist in the listBooks
+		Set<Integer> isbns = new HashSet<Integer>();
+		
+		//Takes the ISBNs of the randomBooks set and put it 
+		//in an Integer ISBN set
+		for (Iterator<StockBook> i = randomBooks.iterator(); i.hasNext();) {
+			StockBook elem = i.next();
+			isbns.add(elem.getISBN());
+		}
+		
+		//Puts the ISBN which does not exist in the listBooks
 		//in a new set, booksToAdd.
 		Set<StockBook> booksToAdd = new HashSet<StockBook>();
 		for (StockBook b : listBooks) {
-			if (!randomBooks.contains(b)) {
-				booksToAdd.add(b);
+				if (!isbns.contains(b.getISBN())){
+					booksToAdd.add(b);
 			}
 		}
 				
