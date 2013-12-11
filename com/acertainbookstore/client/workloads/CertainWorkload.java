@@ -90,6 +90,10 @@ public class CertainWorkload {
 		}
 
 		// TODO: You should initialize data for your bookstore here
+		int numberOfBooks = 150;
+		BookSetGenerator bookgenerator = new BookSetGenerator();
+		bookgenerator.nextSetOfStockBooks(numberOfBooks);
+		
 
 		// Finished initialization, stop the clients if not localTest
 		if (!localTest) {
