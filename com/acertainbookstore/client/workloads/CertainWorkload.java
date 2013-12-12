@@ -66,7 +66,17 @@ public class CertainWorkload {
 	 * @param workerRunResults
 	 */
 	public static void reportMetric(List<WorkerRunResult> workerRunResults) {
-		// TODO: You should aggregate metrics and output them for plotting here
+		int throughput = 0;
+		float latency = 0;
+		for (WorkerRunResult result : workerRunResults)
+		{
+			throughput += result.getSuccessfulInteractions();
+			latency += result.getElapsedTimeInNanoSecs();
+		}
+		latency /= workerRunResults.size();
+		
+		System.out.println("Throughput: " + throughput);
+		System.out.println("Latency: " + latency);
 	}
 
 	/**
@@ -91,7 +101,7 @@ public class CertainWorkload {
 			bookStore = new BookStoreHTTPProxy(serverAddress);
 		}
 
-		int numberOfBooks = 150;
+		int numberOfBooks = 10;
 		BookSetGenerator bookgenerator = new BookSetGenerator();
 		Set<StockBook> booksGenerated = bookgenerator.nextSetOfStockBooks(numberOfBooks);		
 		stockManager.addBooks(booksGenerated);

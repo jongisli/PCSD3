@@ -1,6 +1,8 @@
 package com.acertainbookstore.client.workloads;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
@@ -28,28 +30,22 @@ public class BookSetGenerator {
 	 */
 	public Set<Integer> sampleFromSetOfISBNs(Set<Integer> isbns, int num) {
 
-		Set<Integer> selectedISBNs = new HashSet<Integer>(num);
-
-		int size = isbns.size();
-		int i = 0;
-		int isbn = 0;
-
-		for (int m = 0; m < num; m++) {
-			int item = new Random().nextInt(size);
-
-			for (Integer obj : isbns) {
-				if (i == item)
-					isbn = obj;
-				i = i + 1;
-			}
-			if (!selectedISBNs.contains(isbn)) {
-				selectedISBNs.add(isbn);
-			} else {
-				m = m - 1;
-			}
+		if (isbns.size() < num)
+			return null;
+		
+		Object[] ISBNsList = isbns.toArray();
+		Set<Integer> sampleISBNs = new HashSet<Integer>();
+		Random rnd = new Random();
+		
+		while (sampleISBNs.size() <= num)
+		{
+			int randomIdx = rnd.nextInt(ISBNsList.length);
+			int sampleISBN = (Integer) ISBNsList[randomIdx];
+			if (!sampleISBNs.contains(sampleISBN))
+				sampleISBNs.add(sampleISBN);
 		}
 
-		return selectedISBNs;
+		return sampleISBNs;
 	}
 
 	/**
@@ -79,9 +75,9 @@ public class BookSetGenerator {
 
 		for (int n = 0; n < num; n++) {
 			
-			ISBN = new Random().nextInt(maxISBN);
-			price = new Random().nextFloat() * maxPrice;
-			numCopies = new Random().nextInt(maxNumCopies);
+			ISBN = new Random().nextInt(maxISBN) + 1;
+			price = new Random().nextFloat() * maxPrice + 1;
+			numCopies = new Random().nextInt(maxNumCopies) + 1;
 			editorPick = new Random().nextBoolean();
 			
 

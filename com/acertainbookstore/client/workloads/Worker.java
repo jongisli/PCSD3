@@ -139,7 +139,7 @@ public class Worker implements Callable<WorkerRunResult> {
 
 		//Adds the new set of books that was not found 
 		//in the list returned by getBooks
-		configuration.getStockManager().addBooks(booksToAdd);	
+		configuration.getStockManager().addBooks(booksToAdd);
 	}
 
 	/**
