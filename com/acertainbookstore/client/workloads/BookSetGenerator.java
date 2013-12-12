@@ -102,21 +102,6 @@ public class BookSetGenerator {
 			title  = titleBuilder.toString();
 			author = authorBuilder.toString();
 			
-			/*
-			for (int i = 0; i < titleLength; i++) {
-				char c = (char) (r.nextInt((int) (Character.MAX_VALUE)));
-				titleBuilder.append(c);
-			}
-			title = titleBuilder.toString();
-			
-			for (int i = 0; i < authorLength; i++) {
-				char ch = (char) (r.nextInt((int) (Character.MAX_VALUE)));
-				authorBuilder.append(ch);
-			}
-			author = authorBuilder.toString();
-			
-			*/
-
 			booksGenerated.add(new ImmutableStockBook(ISBN, title, author,
 					price, numCopies, saleMisses, timesRated, totalRating,
 					editorPick));
