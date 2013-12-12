@@ -30,14 +30,16 @@ public class CertainWorkload {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		int numConcurrentWorkloadThreads = 10;
+		int numConcurrentWorkloadThreads = 3;
 		String serverAddress = "http://localhost:8081";
 		boolean localTest = true;
 		List<WorkerRunResult> workerRunResults = new ArrayList<WorkerRunResult>();
 		List<Future<WorkerRunResult>> runResults = new ArrayList<Future<WorkerRunResult>>();
 
+		System.out.println("Initializing data ...");
 		initializeBookStoreData(serverAddress, localTest);
-
+		System.out.println("Finished initializing data");
+		
 		ExecutorService exec = Executors
 				.newFixedThreadPool(numConcurrentWorkloadThreads);
 
@@ -66,11 +68,12 @@ public class CertainWorkload {
 	 * @param workerRunResults
 	 */
 	public static void reportMetric(List<WorkerRunResult> workerRunResults) {
-		int throughput = 0;
+		float throughput = 0;
 		float latency = 0;
 		for (WorkerRunResult result : workerRunResults)
 		{
-			throughput += result.getSuccessfulInteractions();
+			float timeInMS = (float) result.getElapsedTimeInNanoSecs() / 1000000 ;
+			throughput += result.getSuccessfulInteractions() / timeInMS;
 			latency += result.getElapsedTimeInNanoSecs();
 		}
 		latency /= workerRunResults.size();
@@ -101,7 +104,7 @@ public class CertainWorkload {
 			bookStore = new BookStoreHTTPProxy(serverAddress);
 		}
 
-		int numberOfBooks = 10;
+		int numberOfBooks = 150;
 		BookSetGenerator bookgenerator = new BookSetGenerator();
 		Set<StockBook> booksGenerated = bookgenerator.nextSetOfStockBooks(numberOfBooks);		
 		stockManager.addBooks(booksGenerated);
