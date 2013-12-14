@@ -32,10 +32,10 @@ public class CertainWorkload {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		int numConcurrentWorkloadThreads = 50;
+		int numConcurrentWorkloadThreads = 45;
 		int numberOfBooks = 100;
 		String serverAddress = "http://localhost:8081";
-		boolean localTest = true;
+		boolean localTest = false;
 		List<WorkerRunResult> workerRunResults = new ArrayList<WorkerRunResult>();
 		List<Future<WorkerRunResult>> runResults = new ArrayList<Future<WorkerRunResult>>();
 
@@ -62,7 +62,9 @@ public class CertainWorkload {
 		}
 
 		exec.shutdownNow(); // shutdown the executor
+		System.out.println("Reporting metrics ...");
 		reportMetric(workerRunResults, numberOfBooks);
+		System.out.println("Finished reporting metrics ...");
 	}
 
 	/**
