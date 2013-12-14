@@ -66,11 +66,11 @@ public class BookSetGenerator {
 		String author = null;
 		float price = 0;
 		int numCopies = 0;
-		int saleMisses = 0;
-		int timesRated = 0;
-		int totalRating = 0;
+		long saleMisses = 0;
+		long timesRated = 0;
+		long totalRating = 0;
 		boolean editorPick = false;
-		int titleLength = 40;
+		int titleLength = 20;
 		int authorLength = 20;
 
 		for (int n = 0; n < num; n++) {
@@ -89,12 +89,14 @@ public class BookSetGenerator {
 			char[] authorGenerated = "abcdefghijklmnopqrstuvwxyz".toCharArray();
 			Random random = new Random();
 			
-			for (int i = 0; i < titleLength; i++) {
+			int maxTitleLength = new Random().nextInt(titleLength) + 1;
+			for (int i = 0; i < maxTitleLength; i++) {
 			    char c = titleGenerated[random.nextInt(titleGenerated.length)];
 			    titleBuilder.append(c);
 			}
 			
-			for (int i = 0; i < authorLength; i++) {
+			int maxAuthorLength = new Random().nextInt(authorLength) + 1;
+			for (int i = 0; i < maxAuthorLength; i++) {
 			    char ch = authorGenerated[random.nextInt(authorGenerated.length)];
 			    authorBuilder.append(ch);
 			}
