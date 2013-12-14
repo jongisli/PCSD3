@@ -3,6 +3,8 @@
  */
 package com.acertainbookstore.client.workloads;
 
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -30,14 +32,15 @@ public class CertainWorkload {
 	 * @param args
 	 */
 	public static void main(String[] args) throws Exception {
-		int numConcurrentWorkloadThreads = 3;
+		int numConcurrentWorkloadThreads = 50;
+		int numberOfBooks = 100;
 		String serverAddress = "http://localhost:8081";
 		boolean localTest = true;
 		List<WorkerRunResult> workerRunResults = new ArrayList<WorkerRunResult>();
 		List<Future<WorkerRunResult>> runResults = new ArrayList<Future<WorkerRunResult>>();
 
 		System.out.println("Initializing data ...");
-		initializeBookStoreData(serverAddress, localTest);
+		initializeBookStoreData(serverAddress, localTest, numberOfBooks);
 		System.out.println("Finished initializing data");
 		
 		ExecutorService exec = Executors
@@ -59,7 +62,7 @@ public class CertainWorkload {
 		}
 
 		exec.shutdownNow(); // shutdown the executor
-		reportMetric(workerRunResults);
+		reportMetric(workerRunResults, numberOfBooks);
 	}
 
 	/**
@@ -67,19 +70,39 @@ public class CertainWorkload {
 	 * 
 	 * @param workerRunResults
 	 */
-	public static void reportMetric(List<WorkerRunResult> workerRunResults) {
-		float throughput = 0;
-		float latency = 0;
+	public static void reportMetric(List<WorkerRunResult> workerRunResults, int numberOfBooks) {
+		
+		PrintWriter resultFile = null;
+		try {
+			resultFile = new PrintWriter(
+					"data/clients_" + workerRunResults.size() 
+					+ "_books_" + numberOfBooks);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	
+		
+		int workerNr = 1;
+		resultFile.println(
+				"#WorkerNr "
+				+ "TotalRuns "
+				+ "SuccessfulInteractions "
+				+ "TotalFrequentBookStoreInteractionRuns "
+				+ "SuccessfulFrequentBookStoreInteractionRuns "
+				+ "ElapsedTimeInNanoSecs");
+		
 		for (WorkerRunResult result : workerRunResults)
 		{
-			float timeInMS = (float) result.getElapsedTimeInNanoSecs() / 1000000 ;
-			throughput += result.getSuccessfulInteractions() / timeInMS;
-			latency += result.getElapsedTimeInNanoSecs();
+			resultFile.println(
+					workerNr + " " + result.getTotalRuns()
+					+ " " + result.getSuccessfulInteractions() 
+					+ " " + result.getTotalFrequentBookStoreInteractionRuns()
+					+ " " + result.getSuccessfulFrequentBookStoreInteractionRuns()
+					+ " " + result.getElapsedTimeInNanoSecs());
+			workerNr++;
 		}
-		latency /= workerRunResults.size();
 		
-		System.out.println("Throughput: " + throughput);
-		System.out.println("Latency: " + latency);
+		resultFile.close();
 	}
 
 	/**
@@ -92,7 +115,7 @@ public class CertainWorkload {
 	 * @throws Exception
 	 */
 	public static void initializeBookStoreData(String serverAddress,
-			boolean localTest) throws Exception {
+			boolean localTest, int numberOfBooks) throws Exception {
 		BookStore bookStore = null;
 		StockManager stockManager = null;
 		// Initialize the RPC interfaces if its not a localTest
@@ -104,7 +127,6 @@ public class CertainWorkload {
 			bookStore = new BookStoreHTTPProxy(serverAddress);
 		}
 
-		int numberOfBooks = 150;
 		BookSetGenerator bookgenerator = new BookSetGenerator();
 		Set<StockBook> booksGenerated = bookgenerator.nextSetOfStockBooks(numberOfBooks);		
 		stockManager.addBooks(booksGenerated);
